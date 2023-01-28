@@ -7,8 +7,10 @@ import 'removal_list_item.dart';
 //https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html
 
 class AnimatedRemovalList extends StatefulWidget {
+  //constructor
   const AnimatedRemovalList({super.key});
 
+  //state
   @override
   State<AnimatedRemovalList> createState() =>
       _AnimatedRemovalListState();
