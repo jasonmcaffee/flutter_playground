@@ -62,7 +62,7 @@ class ListModel<TDataItem> {
   //calls removedItemBuilder function so that the UI can do animations and render what the item
   //should look like as it's being removed from the list.
   //todo: slideAnimation
-  TDataItem removeAt(int index) {
+  TDataItem removeAt(int index, Widget Function(BuildContext context, TDataItem dataItem, Animation<double> animation, int index) buildRemovedItem) {
     final TDataItem removedDataItem = dataItems.removeAt(index);
     final removedItemDisplayNumber = removedDataItem.hashCode;
     print('removed item index: $index removedItemDisplayNumber: ${removedItemDisplayNumber}');
@@ -71,7 +71,8 @@ class ListModel<TDataItem> {
           index,
               (BuildContext context, Animation<double> animation){
             print('animatedList removeItem builder called index: $index');
-            return removedItemBuilder(removedDataItem, context, animation);
+            // return removedItemBuilder(removedDataItem, context, animation);
+            return buildRemovedItem(context, removedDataItem, animation, index);
           }
       );
     }
@@ -85,25 +86,3 @@ class ListModel<TDataItem> {
 
   int indexOf(TDataItem item) => dataItems.indexOf(item);
 }
-
-// class ListDataItem {
-//   late String displayName;
-//   ListDataItem({
-//     required this.displayName
-//   });
-// }
-//
-// /// VM responsible for maintain list state, including list data items and associated SliverAnimatedListState
-// class AnimatedRemovalListVM extends ChangeNotifier{
-//   //todo: ListDataItem should be a generic
-//   late final List<ListDataItem> listDataItems;
-//
-//   //in order to modify the SliverAnimatedList, we must expose a key to its state
-//   final GlobalKey<SliverAnimatedListState> listKey = GlobalKey<SliverAnimatedListState>();
-//
-//   //constructor
-//   AnimatedRemovalListVM({
-//     required listDataItems,
-//   });
-//
-// }

@@ -51,39 +51,13 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
     final dataItem = _listModel[index];
-    return widget.buildItem(context, dataItem, animation, index, ()=> _removeItem(context, index, animation));
+    return widget.buildItem(context, dataItem, animation, index, ()=> _removeItemAndBuildRemovedItem(context, index, animation));
   }
 
-  Widget _removeItem(BuildContext context, int index, Animation<double> animation){
-    final dataItem = _listModel[index];
-    _listModel.removeAt(index);
-    return widget.buildRemovedItem(context, dataItem, animation, index);
-  }
-
-  /// The builder function used to build items that have been removed.
-  ///
-  /// Used to build an item after it has been removed from the list. This method
-  /// is needed because a removed item remains visible until its animation has
-  /// completed (even though it's gone as far this ListModel is concerned). The
-  /// widget will be used by the [AnimatedListState.removeItem] method's
-  /// [AnimatedRemovedItemBuilder] parameter.
-  Widget _buildRemovedItem(
-      int displayItemNumber, BuildContext context, Animation<double> animation) {
-    print('buildRemovedItem called for displayItemNumber: $displayItemNumber');
-    return RemovableListItem(
-      animation: animation,
-      displayItemNumber: displayItemNumber,
-      dataItem: displayItemNumber,
-      onRemove: (){
-        _remove();
-      },
-    );
-  }
-
-  // Remove the selected item from the list model.
-  void _remove() {
-    final indexToRemove = _listModel.length - 1;
-    _listModel.removeAt(indexToRemove);
+  _removeItemAndBuildRemovedItem(BuildContext context, int index, Animation<double> animation){
+    _listModel.removeAt(index, (BuildContext context, TDataItem dataItem, Animation<double> animation, int index) {
+      return widget.buildRemovedItem(context, dataItem, animation, index);
+    });
   }
 
   @override
@@ -118,14 +92,7 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
         tooltip: 'Insert a new item.',
         iconSize: 32,
       ),
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.remove_circle),
-          onPressed: _remove,
-          tooltip: 'Remove the selected item.',
-          iconSize: 32,
-        ),
-      ],
+      actions: <Widget>[],
     );
   }
 }

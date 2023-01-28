@@ -19,7 +19,7 @@ class DiscoveredAccountsListItem extends StatelessWidget{
     return Row(
       children: [
         Expanded(child:Text(
-            'Item ${dataItem.displayText}',
+            '${dataItem.displayText}',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
@@ -30,16 +30,6 @@ class DiscoveredAccountsListItem extends StatelessWidget{
           iconSize: 32,
         ),)
       ],
-    );
-
-    return Card(
-      color:  Colors.black12,
-      child: Center(
-        child: Text(
-          'Item ${dataItem.displayText}',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-      ),
     );
   }
 }
