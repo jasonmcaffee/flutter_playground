@@ -15,7 +15,7 @@ class DiscoveredAccountsVM extends ChangeNotifier{
 
   //todo: maybe this should be defined in the DiscoveredAccounts widget?
   removedItemBuilder(DiscoveredAccountsListDataItem item, BuildContext context, Animation<double> animation){
-    return DiscoveredAccountsListItem(dataItem: item);
+    return DiscoveredAccountsListItem(dataItem: item, removeItemFromList: ()=>{},);
   }
 
   //typically called during the DiscoveredAccounts widget build

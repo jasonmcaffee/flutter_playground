@@ -19,11 +19,11 @@ class DiscoveredAccounts extends StatelessWidget{
           builder: (context, discoveredAccountsVM, _){
             return AnimatedRemovalList<DiscoveredAccountsListDataItem>(
                 listModel: discoveredAccountsVM.listModel,
-                buildItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
-                  return itemBuilder(index, dataItem, discoveredAccountsVM);
+                buildItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index, VoidCallback removeItemFromList){
+                  return buildItem(index, dataItem, discoveredAccountsVM, removeItemFromList);
                 },
-                removeItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
-                  return removeItem(context, dataItem, animation, index);
+                buildRemovedItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
+                  return buildRemovedItem(context, dataItem, animation, index);
                 },
             );
           },
@@ -33,12 +33,13 @@ class DiscoveredAccounts extends StatelessWidget{
   }
 
   //called on for each item from getDiscoveredAccounts
-  Widget itemBuilder(int index,  DiscoveredAccountsListDataItem dataItem, DiscoveredAccountsVM discoveredAccountsVM){
+  Widget buildItem(int index,  DiscoveredAccountsListDataItem dataItem, DiscoveredAccountsVM discoveredAccountsVM, VoidCallback removeItemFromList){
     DiscoveredAccountsListDataItem dataItem = discoveredAccountsVM.listModel[index];
-    return DiscoveredAccountsListItem(dataItem: dataItem);
+    return DiscoveredAccountsListItem(dataItem: dataItem, removeItemFromList: removeItemFromList);
   }
 
-  Widget removeItem(BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
-    return DiscoveredAccountsListItem(dataItem: dataItem);
+  Widget buildRemovedItem(BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
+    DiscoveredAccountsListDataItem d = DiscoveredAccountsListDataItem(displayText: 'removed...');
+    return DiscoveredAccountsListItem(dataItem: d, removeItemFromList: ()=>{},);
   }
 }

@@ -7,21 +7,21 @@ import 'removal_list_item.dart';
 //https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html
 
 //function signature for creating a new item
-typedef BuildItem<TDataItem> = Widget Function (BuildContext context, TDataItem dataItem, Animation<double> animation, int index);
-typedef RemoveItem<TDataItem> = BuildItem<TDataItem>;
+typedef BuildItem<TDataItem> = Widget Function (BuildContext context, TDataItem dataItem, Animation<double> animation, int index, VoidCallback removeItemFromListCallback);
+typedef RemoveItem<TDataItem> = Widget Function (BuildContext context, TDataItem dataItem, Animation<double> animation, int index);
 
 class AnimatedRemovalList<TDataItem> extends StatefulWidget {
   //model for syncing sliverAnimatedState and dataItems.
   //is referenced by AnimatedRemovalListState during initState
   final ListModel<TDataItem> listModel;
   final BuildItem<TDataItem> buildItem;
-  final RemoveItem<TDataItem> removeItem;
+  final RemoveItem<TDataItem> buildRemovedItem;
   //constructor
   const AnimatedRemovalList({
     super.key,
     required this.listModel,
     required this.buildItem,
-    required this.removeItem,
+    required this.buildRemovedItem,
   });
 
   //state
@@ -35,17 +35,9 @@ class AnimatedRemovalList<TDataItem> extends StatefulWidget {
 
 
 class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDataItem>> {
-
-  // final GlobalKey<SliverAnimatedListState> _listKey =
-  //     GlobalKey<SliverAnimatedListState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-      GlobalKey<ScaffoldMessengerState>();
   //responsible for wrapping the underlying data model and SliverListAnimatedState model, in order to keep them both in sync.
   late ListModel<TDataItem> _listModel;
-  // int? _selectedItem;
-  late int
-      _nextItem; // The next item inserted when the user presses the '+' button.
 
   //no constructor, as we are not allowed to pass constructor params.  everything must be done in initState
 
@@ -53,14 +45,19 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
   void initState() {
     super.initState();
     _listModel = widget.listModel;
-    _nextItem = 3;
   }
 
   // Used to build list items that haven't been removed.
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    final TDataItem dataItem = _listModel[index];
-    return widget.buildItem(context, dataItem, animation, index);
+    final dataItem = _listModel[index];
+    return widget.buildItem(context, dataItem, animation, index, ()=> _removeItem(context, index, animation));
+  }
+
+  Widget _removeItem(BuildContext context, int index, Animation<double> animation){
+    final dataItem = _listModel[index];
+    _listModel.removeAt(index);
+    return widget.buildRemovedItem(context, dataItem, animation, index);
   }
 
   /// The builder function used to build items that have been removed.

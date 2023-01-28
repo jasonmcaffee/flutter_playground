@@ -41,7 +41,7 @@ class RemovableListItem<TDataItem> extends StatelessWidget {
               color:  Colors.black12,
               child: Center(
                 child: Text(
-                  'Item $displayItemNumber',
+                  'Item -- $displayItemNumber',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
