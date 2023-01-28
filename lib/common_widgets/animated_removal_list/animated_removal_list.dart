@@ -54,9 +54,9 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
     return widget.buildItem(context, dataItem, animation, index, ()=> _removeItemAndBuildRemovedItem(context, index, animation, dataItem));
   }
 
-  _removeItemAndBuildRemovedItem(BuildContext context, int index, Animation<double> animation, TDataItem dataItem){
+  _removeItemAndBuildRemovedItem(BuildContext context, int likelyIncorrectIndex, Animation<double> animation, TDataItem dataItem){
     final indexToRemove = _listModel.indexOf(dataItem);
-    print('_removeItemAndBuildRemovedItem removing $indexToRemove original index: $index');
+    print('_removeItemAndBuildRemovedItem removing $indexToRemove original index: $likelyIncorrectIndex');
     _listModel.removeAt(indexToRemove, (BuildContext context, TDataItem dataItem, Animation<double> animation, int index) {
       return widget.buildRemovedItem(context, dataItem, animation, index);
     });
