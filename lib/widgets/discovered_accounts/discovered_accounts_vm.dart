@@ -20,6 +20,10 @@ class DiscoveredAccountsVM extends ChangeNotifier{
     listModel.insertAll(dataItems);
     notifyListeners();
   }
+
+  Future<void> linkAccountToBu(DiscoveredAccountsListDataItem dataItem) async {
+    return fakeBackendCallToLinkAccountToBU();
+  }
 }
 
 Future<List<DiscoveredAccountsListDataItem>> fakeBackendCallToGetDiscoveredAccounts() async {
@@ -35,4 +39,8 @@ Future<List<DiscoveredAccountsListDataItem>> fakeBackendCallToGetDiscoveredAccou
     DiscoveredAccountsListDataItem(displayText: 'Account 8'),
     DiscoveredAccountsListDataItem(displayText: 'Account 9'),
   ];
+}
+
+Future<void> fakeBackendCallToLinkAccountToBU() async {
+  await Future.delayed(const Duration(seconds: 3));
 }

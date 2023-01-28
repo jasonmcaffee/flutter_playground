@@ -35,11 +35,22 @@ class DiscoveredAccounts extends StatelessWidget{
   //called on for each item from getDiscoveredAccounts
   Widget buildItem(int index,  DiscoveredAccountsListDataItem dataItem, DiscoveredAccountsVM discoveredAccountsVM, VoidCallback removeItemFromList){
     DiscoveredAccountsListDataItem dataItem = discoveredAccountsVM.listModel[index];
-    return DiscoveredAccountsListItem(dataItem: dataItem, removeItemFromList: removeItemFromList);
+    return DiscoveredAccountsListItem(dataItem: dataItem, onLinkAccountToBUPressed: (){
+      onLinkAccountToBUPressed(dataItem, removeItemFromList);
+    });
+  }
+
+  onLinkAccountToBUPressed(DiscoveredAccountsListDataItem dataItem, VoidCallback removeItemFromList) async{
+    try {
+      await DiscoveredAccountsVM().linkAccountToBu(dataItem);
+      removeItemFromList();
+    }catch(e){
+      print('error linkAccountToBU $e');
+    }
   }
 
   Widget buildRemovedItem(BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
     DiscoveredAccountsListDataItem d = DiscoveredAccountsListDataItem(displayText: 'removed...');
-    return DiscoveredAccountsListItem(dataItem: d, removeItemFromList: ()=>{},);
+    return DiscoveredAccountsListItem(dataItem: d, onLinkAccountToBUPressed: ()=>{},);
   }
 }

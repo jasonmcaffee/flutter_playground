@@ -9,9 +9,9 @@ class DiscoveredAccountsListDataItem {
 
 class DiscoveredAccountsListItem extends StatelessWidget{
   final DiscoveredAccountsListDataItem dataItem;
-  final VoidCallback removeItemFromList;
+  final VoidCallback onLinkAccountToBUPressed;
 
-  const DiscoveredAccountsListItem({Key? key, required this.dataItem, required this.removeItemFromList}) : super(key: key);
+  const DiscoveredAccountsListItem({Key? key, required this.dataItem, required this.onLinkAccountToBUPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class DiscoveredAccountsListItem extends StatelessWidget{
         ),
         Expanded(child: IconButton(
           icon: const Icon(Icons.remove_circle),
-          onPressed: removeItemFromList,
+          onPressed: onLinkAccountToBUPressed,
           tooltip: 'Remove the selected item.',
           iconSize: 32,
         ),)
