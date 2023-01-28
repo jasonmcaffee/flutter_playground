@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_playground/widgets/discovered_accounts/discovered_accounts.dart';
 import 'common_widgets/animated_removal_list/animated_removal_list.dart';
 
 void main() {
@@ -102,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(
               width: 500,
               height: 500,
-              child: AnimatedRemovalList(),
+              child: DiscoveredAccounts(),
             ),
             // const SliverAnimatedListSample(),
             Text(

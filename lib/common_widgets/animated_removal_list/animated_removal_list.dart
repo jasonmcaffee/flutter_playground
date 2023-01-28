@@ -6,36 +6,55 @@ import 'removal_list_item.dart';
 //resources
 //https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html
 
-class AnimatedRemovalList extends StatefulWidget {
+//function signature for creating a new item
+typedef BuildItem = Widget Function<TDataItem> (BuildContext context, TDataItem dataItem, Animation<double> animation, int index);
+
+class AnimatedRemovalList<TDataItem> extends StatefulWidget {
+  //model for syncing sliverAnimatedState and dataItems.
+  //is referenced by AnimatedRemovalListState during initState
+  final ListModel<TDataItem> listModel;
+  final BuildItem buildItem;
   //constructor
-  const AnimatedRemovalList({super.key});
+  const AnimatedRemovalList({
+    super.key,
+    required this.listModel,
+    required this.buildItem
+  });
 
   //state
+  //per flutter, don't pass any data here.  rather, reference the widget's property
+  //https://dart-lang.github.io/linter/lints/no_logic_in_create_state.html
+  //https://stackoverflow.com/questions/50287995/passing-data-to-statefulwidget-and-accessing-it-in-its-state-in-flutter
   @override
   State<AnimatedRemovalList> createState() =>
       _AnimatedRemovalListState();
 }
 
-class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList> {
-  final GlobalKey<SliverAnimatedListState> _listKey =
-      GlobalKey<SliverAnimatedListState>();
+
+class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDataItem>> {
+
+  // final GlobalKey<SliverAnimatedListState> _listKey =
+  //     GlobalKey<SliverAnimatedListState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
   //responsible for wrapping the underlying data model and SliverListAnimatedState model, in order to keep them both in sync.
-  late ListModel<int> _listModel;
+  late ListModel<TDataItem> _listModel;
   // int? _selectedItem;
   late int
       _nextItem; // The next item inserted when the user presses the '+' button.
 
+  //no constructor, as we are not allowed to pass constructor params.  everything must be done in initState
+
   @override
   void initState() {
     super.initState();
-    _listModel = ListModel<int>(
-      listKey: _listKey,
-      dataItems: <int>[0, 1, 2],
-      removedItemBuilder: _buildRemovedItem,
-    );
+    // _listModel = ListModel<int>(
+    //   listKey: _listKey,
+    //   dataItems: <int>[0, 1, 2],
+    //   removedItemBuilder: _buildRemovedItem,
+    // );
+    _listModel = widget.listModel;
     _nextItem = 3;
   }
 
@@ -43,17 +62,7 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList> {
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
     final dataItem = _listModel[index];
-    return RemovableListItem<TDataItem>(
-      animation: animation,
-      displayItemNumber: _listModel[index],
-      dataItem: dataItem as TDataItem, //todo: shouldn't need to cast
-      // selected: _selectedItem == _list[index],
-      onRemove: () {
-        setState(() {
-          // _selectedItem = _selectedItem == _list[index] ? null : _list[index];
-        });
-      },
-    );
+    return widget.buildItem(context, dataItem, animation, index);
   }
 
   /// The builder function used to build items that have been removed.
@@ -76,12 +85,6 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList> {
     );
   }
 
-  // insert at the end of the list
-  void _insert() {
-    final int index = _listModel.length;
-    _listModel.insert(index, _nextItem++);
-  }
-
   // Remove the selected item from the list model.
   void _remove() {
     final indexToRemove = _listModel.length - 1;
@@ -96,7 +99,7 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList> {
           slivers: <Widget>[
             createSliverAppBar(),
             SliverAnimatedList(
-              key: _listKey,
+              key: _listModel.listKey,
               initialItemCount: _listModel.length,
               itemBuilder: _buildItem,
             ),
@@ -116,7 +119,7 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList> {
       backgroundColor: Colors.amber[900],
       leading: IconButton(
         icon: const Icon(Icons.add_circle),
-        onPressed: _insert,
+        onPressed: (){},
         tooltip: 'Insert a new item.',
         iconSize: 32,
       ),

@@ -6,7 +6,7 @@
 // transitions from 0.0 to 1.0.
 import 'package:flutter/material.dart';
 
-//todo: this should accept a child widget.
+//todo: this should accept a child widget. and shouldn't need TDataItem ...
 class RemovableListItem<TDataItem> extends StatelessWidget {
   const RemovableListItem({
     super.key,

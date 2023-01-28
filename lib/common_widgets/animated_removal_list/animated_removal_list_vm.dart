@@ -32,12 +32,30 @@ class ListModel<TDataItem> {
   final List<TDataItem> dataItems;
 
   //state of the sliverAnimatedList which is used to remove items from the UI.
-  SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
+  // SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
+  // SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
+  SliverAnimatedListState get _sliverAnimatedListState {
+    print('listKey is ${listKey.currentState} ${listKey.currentWidget.hashCode}');
+    return listKey.currentState!;
+  }
 
   //insert an item into the dataItems and corresponding sliverAnimatedListState
   void insert(int index, TDataItem item) {
     dataItems.insert(index, item);
     _sliverAnimatedListState.insertItem(index);
+  }
+
+  void insertAtEnd(TDataItem item){
+    final index = dataItems.length;
+    // dataItems.add(item);
+    dataItems.insert(index, item);
+    _sliverAnimatedListState.insertItem(index);
+  }
+
+  void insertAll(List<TDataItem> dataItems){
+    for(var dataItem in dataItems){
+      insertAtEnd(dataItem);
+    }
   }
 
   //remove the item at the specified index from the dataItems and sliverAnimatedListState
