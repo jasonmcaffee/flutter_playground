@@ -19,6 +19,7 @@ class _SliverAnimatedListSampleState extends State<SliverAnimatedListSample> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
+  //responsible for wrapping the underlying data model and SliverListAnimatedState model, in order to keep them both in sync.
   late ListModel<int> _listModel;
   // int? _selectedItem;
   late int
@@ -29,7 +30,7 @@ class _SliverAnimatedListSampleState extends State<SliverAnimatedListSample> {
     super.initState();
     _listModel = ListModel<int>(
       listKey: _listKey,
-      initialItems: <int>[0, 1, 2],
+      dataItems: <int>[0, 1, 2],
       removedItemBuilder: _buildRemovedItem,
     );
     _nextItem = 3;
@@ -76,22 +77,6 @@ class _SliverAnimatedListSampleState extends State<SliverAnimatedListSample> {
   void _remove() {
     final indexToRemove = _listModel.length - 1;
     _listModel.removeAt(indexToRemove);
-    // _listKey.currentState?.removeItem(indexToRemove, (context, animation){
-    //   return _buildRemovedItem(indexToRemove, context, animation);
-    // });
-    // if (_selectedItem != null) {
-    //   _list.removeAt(_list.length);
-    //   setState(() {
-    //     _selectedItem = null;
-    //   });
-    // } else {
-    //   _scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
-    //     content: Text(
-    //       'Select an item to remove from the list.',
-    //       style: TextStyle(fontSize: 20),
-    //     ),
-    //   ));
-    // }
   }
 
   @override
@@ -138,8 +123,8 @@ class _SliverAnimatedListSampleState extends State<SliverAnimatedListSample> {
   }
 }
 
-typedef RemovedItemBuilder = Widget Function(
-    int item, BuildContext context, Animation<double> animation);
+typedef RemovedItemBuilder<TDataItem> = Widget Function(
+    TDataItem item, BuildContext context, Animation<double> animation);
 
 // Keeps a Dart [List] in sync with an [AnimatedList].
 //
@@ -150,45 +135,45 @@ typedef RemovedItemBuilder = Widget Function(
 // sample app. More list methods are easily added, however methods that
 // mutate the list must make the same changes to the animated list in terms
 // of [AnimatedListState.insertItem] and [AnimatedList.removeItem].
-class ListModel<E> {
+class ListModel<TDataItem> {
   ListModel({
     required this.listKey,
     required this.removedItemBuilder,
-    Iterable<E>? initialItems,
-  }) : _items = List<E>.from(initialItems ?? <E>[]);
+    Iterable<TDataItem>? dataItems,
+  }) : dataItems = List<TDataItem>.from(dataItems ?? <TDataItem>[]);
 
   final GlobalKey<SliverAnimatedListState> listKey;
-  final RemovedItemBuilder removedItemBuilder;
-  final List<E> _items;
+  final RemovedItemBuilder<TDataItem> removedItemBuilder;
+  final List<TDataItem> dataItems;
 
-  SliverAnimatedListState get _animatedList => listKey.currentState!;
+  SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
 
-  void insert(int index, E item) {
-    _items.insert(index, item);
-    _animatedList.insertItem(index);
+  void insert(int index, TDataItem item) {
+    dataItems.insert(index, item);
+    _sliverAnimatedListState.insertItem(index);
   }
 
-  E removeAt(int index) {
-    final E removedItem = _items.removeAt(index);
-    final removedItemDisplayNumber = removedItem.hashCode;
+  TDataItem removeAt(int index) {
+    final TDataItem removedDataItem = dataItems.removeAt(index);
+    final removedItemDisplayNumber = removedDataItem.hashCode;
     print('removed item index: $index removedItemDisplayNumber: ${removedItemDisplayNumber}');
-    if (removedItem != null) {
-      _animatedList.removeItem(
+    if (removedDataItem != null) {
+      _sliverAnimatedListState.removeItem(
         index,
         (BuildContext context, Animation<double> animation){
           print('animatedList removeItem builder called index: $index');
-          return removedItemBuilder(removedItemDisplayNumber, context, animation);
+          return removedItemBuilder(removedDataItem, context, animation);
         }
 
       );
     }
-    return removedItem;
+    return removedDataItem;
   }
 
-  int get length => _items.length;
+  int get length => dataItems.length;
 
-  E operator [](int index) => _items[index];
+  TDataItem operator [](int index) => dataItems[index];
 
-  int indexOf(E item) => _items.indexOf(item);
+  int indexOf(TDataItem item) => dataItems.indexOf(item);
 }
 
