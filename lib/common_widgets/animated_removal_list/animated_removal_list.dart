@@ -7,18 +7,21 @@ import 'removal_list_item.dart';
 //https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html
 
 //function signature for creating a new item
-typedef BuildItem = Widget Function<TDataItem> (BuildContext context, TDataItem dataItem, Animation<double> animation, int index);
+typedef BuildItem<TDataItem> = Widget Function (BuildContext context, TDataItem dataItem, Animation<double> animation, int index);
+typedef RemoveItem<TDataItem> = BuildItem<TDataItem>;
 
 class AnimatedRemovalList<TDataItem> extends StatefulWidget {
   //model for syncing sliverAnimatedState and dataItems.
   //is referenced by AnimatedRemovalListState during initState
   final ListModel<TDataItem> listModel;
-  final BuildItem buildItem;
+  final BuildItem<TDataItem> buildItem;
+  final RemoveItem<TDataItem> removeItem;
   //constructor
   const AnimatedRemovalList({
     super.key,
     required this.listModel,
-    required this.buildItem
+    required this.buildItem,
+    required this.removeItem,
   });
 
   //state
@@ -27,7 +30,7 @@ class AnimatedRemovalList<TDataItem> extends StatefulWidget {
   //https://stackoverflow.com/questions/50287995/passing-data-to-statefulwidget-and-accessing-it-in-its-state-in-flutter
   @override
   State<AnimatedRemovalList> createState() =>
-      _AnimatedRemovalListState();
+      _AnimatedRemovalListState<TDataItem>();
 }
 
 
@@ -49,11 +52,6 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
   @override
   void initState() {
     super.initState();
-    // _listModel = ListModel<int>(
-    //   listKey: _listKey,
-    //   dataItems: <int>[0, 1, 2],
-    //   removedItemBuilder: _buildRemovedItem,
-    // );
     _listModel = widget.listModel;
     _nextItem = 3;
   }
@@ -61,7 +59,7 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
   // Used to build list items that haven't been removed.
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    final dataItem = _listModel[index];
+    final TDataItem dataItem = _listModel[index];
     return widget.buildItem(context, dataItem, animation, index);
   }
 

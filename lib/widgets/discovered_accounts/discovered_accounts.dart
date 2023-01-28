@@ -17,11 +17,14 @@ class DiscoveredAccounts extends StatelessWidget{
         },
         child: Consumer<DiscoveredAccountsVM>(
           builder: (context, discoveredAccountsVM, _){
-            return AnimatedRemovalList(
+            return AnimatedRemovalList<DiscoveredAccountsListDataItem>(
                 listModel: discoveredAccountsVM.listModel,
-                buildItem: <DiscoveredAccountsListDataItem>(BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
-                  return itemBuilder(index, discoveredAccountsVM);
-                }
+                buildItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
+                  return itemBuilder(index, dataItem, discoveredAccountsVM);
+                },
+                removeItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
+                  return removeItem(context, dataItem, animation, index);
+                },
             );
           },
         )
@@ -30,8 +33,12 @@ class DiscoveredAccounts extends StatelessWidget{
   }
 
   //called on for each item from getDiscoveredAccounts
-  Widget itemBuilder(int index, DiscoveredAccountsVM discoveredAccountsVM){
+  Widget itemBuilder(int index,  DiscoveredAccountsListDataItem dataItem, DiscoveredAccountsVM discoveredAccountsVM){
     DiscoveredAccountsListDataItem dataItem = discoveredAccountsVM.listModel[index];
+    return DiscoveredAccountsListItem(dataItem: dataItem);
+  }
+
+  Widget removeItem(BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
     return DiscoveredAccountsListItem(dataItem: dataItem);
   }
 }
