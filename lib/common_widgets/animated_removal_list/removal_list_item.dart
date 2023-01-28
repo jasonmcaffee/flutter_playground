@@ -6,19 +6,22 @@
 // transitions from 0.0 to 1.0.
 import 'package:flutter/material.dart';
 
-class RemovableListItem extends StatelessWidget {
+//todo: this should accept a child widget.
+class RemovableListItem<TDataItem> extends StatelessWidget {
   const RemovableListItem({
     super.key,
-    this.onTap,
+    this.onRemove,
     this.selected = false,
     required this.animation,
-    required this.displayItemNumber,
+    required this.displayItemNumber,//todo: remove this
+    required this.dataItem,
   }) : assert(displayItemNumber >= 0);
 
   final Animation<double> animation;
-  final VoidCallback? onTap;
+  final VoidCallback? onRemove;
   final int displayItemNumber;
   final bool selected;
+  final TDataItem dataItem;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class RemovableListItem extends StatelessWidget {
       child: SizeTransition(
         sizeFactor: animation,
         child: GestureDetector(
-          onTap: onTap,
+          onTap: onRemove,
           child: SizedBox(
             height: 80.0,
             child: Card(

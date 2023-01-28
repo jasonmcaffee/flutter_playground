@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'animated_removal_list_vm.dart';
-import 'list_item.dart';
+import 'removal_list_item.dart';
 
 //resources
 //https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html
@@ -14,7 +14,7 @@ class AnimatedRemovalList extends StatefulWidget {
       _AnimatedRemovalListState();
 }
 
-class _AnimatedRemovalListState extends State<AnimatedRemovalList> {
+class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList> {
   final GlobalKey<SliverAnimatedListState> _listKey =
       GlobalKey<SliverAnimatedListState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -40,11 +40,13 @@ class _AnimatedRemovalListState extends State<AnimatedRemovalList> {
   // Used to build list items that haven't been removed.
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    return RemovableListItem(
+    final dataItem = _listModel[index];
+    return RemovableListItem<TDataItem>(
       animation: animation,
       displayItemNumber: _listModel[index],
+      dataItem: dataItem as TDataItem, //todo: shouldn't need to cast
       // selected: _selectedItem == _list[index],
-      onTap: () {
+      onRemove: () {
         setState(() {
           // _selectedItem = _selectedItem == _list[index] ? null : _list[index];
         });
@@ -65,6 +67,10 @@ class _AnimatedRemovalListState extends State<AnimatedRemovalList> {
     return RemovableListItem(
       animation: animation,
       displayItemNumber: displayItemNumber,
+      dataItem: displayItemNumber,
+      onRemove: (){
+        _remove();
+      },
     );
   }
 
