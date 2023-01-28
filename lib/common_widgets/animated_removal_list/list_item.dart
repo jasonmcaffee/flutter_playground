@@ -6,8 +6,8 @@
 // transitions from 0.0 to 1.0.
 import 'package:flutter/material.dart';
 
-class CardItem extends StatelessWidget {
-  const CardItem({
+class RemovableListItem extends StatelessWidget {
+  const RemovableListItem({
     super.key,
     this.onTap,
     this.selected = false,

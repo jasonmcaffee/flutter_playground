@@ -40,7 +40,7 @@ class _AnimatedRemovalListState extends State<AnimatedRemovalList> {
   // Used to build list items that haven't been removed.
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    return CardItem(
+    return RemovableListItem(
       animation: animation,
       displayItemNumber: _listModel[index],
       // selected: _selectedItem == _list[index],
@@ -62,7 +62,7 @@ class _AnimatedRemovalListState extends State<AnimatedRemovalList> {
   Widget _buildRemovedItem(
       int displayItemNumber, BuildContext context, Animation<double> animation) {
     print('buildRemovedItem called for displayItemNumber: $displayItemNumber');
-    return CardItem(
+    return RemovableListItem(
       animation: animation,
       displayItemNumber: displayItemNumber,
     );
