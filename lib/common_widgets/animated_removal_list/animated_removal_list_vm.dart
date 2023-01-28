@@ -20,24 +20,17 @@ typedef RemovedItemBuilder<TDataItem> = Widget Function(
 class ListModel<TDataItem> {
   ListModel({
     required this.listKey,
-    required this.removedItemBuilder, //it's odd that this widget creating function is in this data class, but this is how Flutter documentation suggests doing it.  An event would be a better approach
     Iterable<TDataItem>? dataItems,
   }) : dataItems = List<TDataItem>.from(dataItems ?? <TDataItem>[]);
 
   //required for us to access the SliverAnimatedListState, which holds the UI representation of our data list, and is needed to update the UI.
   final GlobalKey<SliverAnimatedListState> listKey;
-  //function to be called which returns the widget that should be displayed as the item is being removed off of the list
-  final RemovedItemBuilder<TDataItem> removedItemBuilder;
   //underlying data structure
   final List<TDataItem> dataItems;
 
   //state of the sliverAnimatedList which is used to remove items from the UI.
   // SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
-  // SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
-  SliverAnimatedListState get _sliverAnimatedListState {
-    print('listKey is ${listKey.currentState} ${listKey.currentWidget.hashCode}');
-    return listKey.currentState!;
-  }
+  SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
 
   //insert an item into the dataItems and corresponding sliverAnimatedListState
   void insert(int index, TDataItem item) {
@@ -47,7 +40,6 @@ class ListModel<TDataItem> {
 
   void insertAtEnd(TDataItem item){
     final index = dataItems.length;
-    // dataItems.add(item);
     dataItems.insert(index, item);
     _sliverAnimatedListState.insertItem(index);
   }
@@ -71,7 +63,6 @@ class ListModel<TDataItem> {
           index,
               (BuildContext context, Animation<double> animation){
             print('animatedList removeItem builder called index: $index');
-            // return removedItemBuilder(removedDataItem, context, animation);
             return buildRemovedItem(context, removedDataItem, animation, index);
           }
       );

@@ -8,14 +8,7 @@ class DiscoveredAccountsVM extends ChangeNotifier{
   DiscoveredAccountsVM(){
     listModel = ListModel(
       listKey:  GlobalKey<SliverAnimatedListState>(),
-      removedItemBuilder: (DiscoveredAccountsListDataItem item, BuildContext context, Animation<double> animation) {
-        return removedItemBuilder(item, context, animation);
-    });
-  }
-
-  //todo: maybe this should be defined in the DiscoveredAccounts widget?
-  removedItemBuilder(DiscoveredAccountsListDataItem item, BuildContext context, Animation<double> animation){
-    return DiscoveredAccountsListItem(dataItem: item, removeItemFromList: ()=>{},);
+    );
   }
 
   //typically called during the DiscoveredAccounts widget build
@@ -34,5 +27,12 @@ Future<List<DiscoveredAccountsListDataItem>> fakeBackendCallToGetDiscoveredAccou
     DiscoveredAccountsListDataItem(displayText: 'Account 0'),
     DiscoveredAccountsListDataItem(displayText: 'Account 1'),
     DiscoveredAccountsListDataItem(displayText: 'Account 2'),
+    DiscoveredAccountsListDataItem(displayText: 'Account 3'),
+    DiscoveredAccountsListDataItem(displayText: 'Account 4'),
+    DiscoveredAccountsListDataItem(displayText: 'Account 5'),
+    DiscoveredAccountsListDataItem(displayText: 'Account 6'),
+    DiscoveredAccountsListDataItem(displayText: 'Account 7'),
+    DiscoveredAccountsListDataItem(displayText: 'Account 8'),
+    DiscoveredAccountsListDataItem(displayText: 'Account 9'),
   ];
 }
