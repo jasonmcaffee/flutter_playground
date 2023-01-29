@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../common_widgets/animated_removal_list/animated_removal_list_vm.dart';
 import '../../view_models/discovered_accounts_list_data_item.dart';
 
-class DiscoveredAccountsVM extends ChangeNotifier{
+class DiscoveredAccountsVM{
   late final ListModel<DiscoveredAccountsListDataItem> listModel;
   DiscoveredAccountsVM(){
     listModel = ListModel(
@@ -17,7 +17,7 @@ class DiscoveredAccountsVM extends ChangeNotifier{
     final dataItems = await fakeBackendCallToGetDiscoveredAccounts();
     //update the dataItems corresponding sliverAnimatedListState
     listModel.insertAll(dataItems);
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> linkAccountToBu(DiscoveredAccountsListDataItem dataItem) async {
@@ -26,6 +26,7 @@ class DiscoveredAccountsVM extends ChangeNotifier{
 }
 
 Future<List<DiscoveredAccountsListDataItem>> fakeBackendCallToGetDiscoveredAccounts() async {
+  await Future.delayed(const Duration(seconds: 1));
   return <DiscoveredAccountsListDataItem>[
     DiscoveredAccountsListDataItem(displayText: 'Account 0'),
     DiscoveredAccountsListDataItem(displayText: 'Account 1'),
