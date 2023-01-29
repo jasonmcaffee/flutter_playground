@@ -64,7 +64,8 @@ class ListModel<TDataItem> {
               (BuildContext context, Animation<double> animation){
             print('animatedList removeItem builder called index: $index');
             return buildRemovedItem(context, removedDataItem, animation, index);
-          }
+          },
+        duration: Duration(seconds: 3)
       );
     }
     return removedDataItem;

@@ -5,45 +5,50 @@ import 'package:provider/provider.dart';
 import '../../view_models/discovered_accounts_list_data_item.dart';
 import 'discovered_accounts_vm.dart';
 
-class DiscoveredAccounts extends StatelessWidget{
+class DiscoveredAccounts extends StatefulWidget{
   const DiscoveredAccounts({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => DiscoveredAccountsState();
+}
 
+class DiscoveredAccountsState extends State<DiscoveredAccounts>{
+  late final DiscoveredAccountsVM discoveredAccountsVM;
+  @override
+  initState(){
+    print('DiscoveredAccountsState initState');
+    discoveredAccountsVM = DiscoveredAccountsVM();
+    discoveredAccountsVM.getDiscoveredAccounts(); //the list will re-render after this call completes
+  }
   @override
   Widget build(BuildContext context) {
-    // return const AnimatedRemovalList();
+    print('DiscoveredAccountsState build called');
     return Scaffold(
-      body: ChangeNotifierProvider(
-        create: (_){
-          return DiscoveredAccountsVM()..getDiscoveredAccounts();
-        },
-        child: Consumer<DiscoveredAccountsVM>(
-          builder: (context, discoveredAccountsVM, _){
-            return AnimatedRemovalList<DiscoveredAccountsListDataItem>(
-                listModel: discoveredAccountsVM.listModel,
-                buildItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index, VoidCallback removeItemFromList){
-                  return buildItem(index, dataItem, discoveredAccountsVM, removeItemFromList);
-                },
-                buildRemovedItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
-                  return buildRemovedItem(context, dataItem, animation, index);
-                },
-            );
+        body:  AnimatedRemovalList<DiscoveredAccountsListDataItem>(
+          listModel: discoveredAccountsVM.listModel,
+          buildItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index, VoidCallback removeItemFromList){
+            return buildItem(index, dataItem, discoveredAccountsVM, removeItemFromList);
+          },
+          buildRemovedItem: (BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
+            return buildRemovedItem(context, dataItem, animation, index);
           },
         )
-      )
     );
   }
 
-  //called on for each item from getDiscoveredAccounts
+  //called on for each item from getDiscoveredAccounts call to listModel.insertAll(dataItems)
   Widget buildItem(int index,  DiscoveredAccountsListDataItem dataItem, DiscoveredAccountsVM discoveredAccountsVM, VoidCallback removeItemFromList){
     DiscoveredAccountsListDataItem dataItem = discoveredAccountsVM.listModel[index];
-    return DiscoveredAccountsListItem(dataItem: dataItem, onLinkAccountToBUPressed: (){
-      onLinkAccountToBUPressed(dataItem, removeItemFromList);
+    print('buildItem called for ${dataItem.displayText} index: $index');
+    return DiscoveredAccountsListItem(dataItem: dataItem, onLinkAccountToBUPressed: (discoveredAccountsListItemState){
+      onLinkAccountToBUPressed(dataItem, removeItemFromList, discoveredAccountsListItemState);
     });
   }
 
-  onLinkAccountToBUPressed(DiscoveredAccountsListDataItem dataItem, VoidCallback removeItemFromList) async{
+  onLinkAccountToBUPressed(DiscoveredAccountsListDataItem dataItem, VoidCallback removeItemFromList, DiscoveredAccountsListItemState discoveredAccountsListItemState) async{
     try {
+      discoveredAccountsListItemState.setIsLoading(true);
       await DiscoveredAccountsVM().linkAccountToBu(dataItem);
+      // discoveredAccountsListItemState.setIsLoading(false);
       removeItemFromList();
     }catch(e){
       print('error linkAccountToBU $e');
@@ -51,7 +56,7 @@ class DiscoveredAccounts extends StatelessWidget{
   }
 
   Widget buildRemovedItem(BuildContext context, DiscoveredAccountsListDataItem dataItem, Animation<double> animation, int index){
-    DiscoveredAccountsListDataItem d = DiscoveredAccountsListDataItem(displayText: 'removed...');
-    return DiscoveredAccountsListItem(dataItem: d, onLinkAccountToBUPressed: ()=>{},);
+    DiscoveredAccountsListDataItem d = DiscoveredAccountsListDataItem(displayText: 'removed');
+    return DiscoveredAccountsListItem(dataItem: d, onLinkAccountToBUPressed: (_)=>{},);
   }
 }

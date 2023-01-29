@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_playground/widgets/SliverAnimatedListFromFlutterDev.dart';
 import 'package:flutter_playground/widgets/discovered_accounts/discovered_accounts.dart';
-import 'common_widgets/animated_removal_list/animated_removal_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -64,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Main build called');
     Size size = MediaQuery.of(context).size;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -104,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 500,
               height: 500,
               child: DiscoveredAccounts(),
+              // child: SliverAnimatedListSample(),
             ),
             // const SliverAnimatedListSample(),
             Text(
