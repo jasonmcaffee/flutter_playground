@@ -69,16 +69,21 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        body: CustomScrollView(
-          slivers: <Widget>[
-            createSliverAppBar(),
-            SliverAnimatedList(
-              key: widget.listModel.listKey,
-              initialItemCount: widget.listModel.length,
-              itemBuilder: _buildItem,
-            ),
-          ],
-        )
+        body: AnimatedList(
+          key: widget.listModel.listKey,
+          initialItemCount: widget.listModel.length,
+          itemBuilder: _buildItem,
+        ),
+        // body: CustomScrollView(
+        //   slivers: <Widget>[
+        //     createSliverAppBar(),
+        //     AnimatedList(
+        //       key: widget.listModel.listKey,
+        //       initialItemCount: widget.listModel.length,
+        //       itemBuilder: _buildItem,
+        //     ),
+        //   ],
+        // )
     );
   }
 

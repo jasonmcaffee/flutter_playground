@@ -24,13 +24,13 @@ class ListModel<TDataItem> {
   }) : dataItems = List<TDataItem>.from(dataItems ?? <TDataItem>[]);
 
   //required for us to access the SliverAnimatedListState, which holds the UI representation of our data list, and is needed to update the UI.
-  final GlobalKey<SliverAnimatedListState> listKey;
+  final GlobalKey<AnimatedListState> listKey;
   //underlying data structure
   final List<TDataItem> dataItems;
 
   //state of the sliverAnimatedList which is used to remove items from the UI.
   // SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
-  SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
+  AnimatedListState get _sliverAnimatedListState => listKey.currentState!;
 
   //insert an item into the dataItems and corresponding sliverAnimatedListState
   void insert(int index, TDataItem item) {

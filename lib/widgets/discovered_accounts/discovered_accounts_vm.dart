@@ -6,7 +6,7 @@ class DiscoveredAccountsVM{
   late final ListModel<DiscoveredAccountsListDataItem> listModel;
   DiscoveredAccountsVM(){
     listModel = ListModel(
-      listKey:  GlobalKey<SliverAnimatedListState>(),
+      listKey:  GlobalKey<AnimatedListState>(),
     );
   }
 
