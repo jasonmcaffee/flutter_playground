@@ -163,7 +163,7 @@ class ListModel<E> {
       _animatedList.removeItem(
         index,
             (BuildContext context, Animation<double> animation) =>
-            removedItemBuilder(index, context, animation),
+            removedItemBuilder(removedItem as int, context, animation),
       );
     }
     return removedItem;

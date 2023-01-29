@@ -9,30 +9,47 @@ class DiscoveredAccountsListItem extends StatefulWidget{
   final Function(DiscoveredAccountsListItemState listItemStatePressed) onLinkAccountToBUPressed;
 
   const DiscoveredAccountsListItem({Key? key, required this.dataItem, required this.onLinkAccountToBUPressed}) : super(key: key);
+  // @override
+  // State<StatefulWidget> createState() => DiscoveredAccountsListItemState();
   @override
-  State<StatefulWidget> createState() => DiscoveredAccountsListItemState();
+  State<StatefulWidget> createState(){
+    print('create state called for ${dataItem.displayText}');
+    return DiscoveredAccountsListItemState();
+  }
+
 }
 
 class DiscoveredAccountsListItemState extends State<DiscoveredAccountsListItem>{
-  late bool _isLoading = false;
-
+  late DiscoveredAccountsListDataItem _dataItem;
   @override
   initState(){
     super.initState();
-    // print('initState for ${widget.dataItem.displayText}');
-    _isLoading = false;
+    _dataItem = widget.dataItem;
   }
   setIsLoading(bool isLoading){
+    _dataItem.isLoading = isLoading;
     setState((){
       print('setIsLoading called: $isLoading for ${widget.dataItem.displayText}');
-      _isLoading = isLoading;
+      _dataItem = _dataItem;
     });
+  }
+
+  _setDataItemIfNeeded(){
+    if(_dataItem != widget.dataItem){
+      print('data items dont match so updating state');
+        setState((){
+          _dataItem = widget.dataItem;
+        });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final displayText = _isLoading ? '...${widget.dataItem.displayText}' : widget.dataItem.displayText;
-    print('build called for ${widget.dataItem.displayText} isLoading: $_isLoading');
+    final displayText = _dataItem.isLoading ? '...backend call' : widget.dataItem.displayText;
+    print('build called for ${widget.dataItem.displayText} isLoading: ${_dataItem.isLoading} state. state _dataItem.displayText: ${_dataItem.displayText}');
+    //hack
+    _setDataItemIfNeeded();
+
     return Row(
       children: [
         Expanded(child:Text(
