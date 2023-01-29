@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-
-class DiscoveredAccountsListDataItem {
-  final String displayText;
-  DiscoveredAccountsListDataItem({
-    required this.displayText,
-  });
-}
+import '../../view_models/discovered_accounts_list_data_item.dart';
 
 class DiscoveredAccountsListItem extends StatelessWidget{
   final DiscoveredAccountsListDataItem dataItem;

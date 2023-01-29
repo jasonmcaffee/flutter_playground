@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../../common_widgets/animated_removal_list/animated_removal_list_vm.dart';
-import 'discovered_accounts_list_item.dart';
+import '../../view_models/discovered_accounts_list_data_item.dart';
 
 class DiscoveredAccountsVM extends ChangeNotifier{
   late final ListModel<DiscoveredAccountsListDataItem> listModel;

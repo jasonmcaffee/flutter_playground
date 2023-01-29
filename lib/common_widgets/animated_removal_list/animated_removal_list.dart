@@ -47,13 +47,16 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
     _listModel = widget.listModel;
   }
 
-  // Used to build list items that haven't been removed.
+  //Called on by SliverAnimatedList's itemBuilder, which is used to build out its widget items when its state is changed by _listModel.listKey.currentState.insertItem
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
     final dataItem = _listModel[index];
     return widget.buildItem(context, dataItem, animation, index, ()=> _removeItemAndBuildRemovedItem(context, index, animation, dataItem));
   }
 
+  //called on by the ListItem widget, which is passed a reference to this function so it can call when it is ready for the
+  //item to be removed from the list.
+  //note: don't use index as it's typically outdated, as it's from a closure and becomes stale when other items are removed
   _removeItemAndBuildRemovedItem(BuildContext context, int likelyIncorrectIndex, Animation<double> animation, TDataItem dataItem){
     final indexToRemove = _listModel.indexOf(dataItem);
     print('_removeItemAndBuildRemovedItem removing $indexToRemove original index: $likelyIncorrectIndex');

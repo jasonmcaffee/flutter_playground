@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_playground/common_widgets/animated_removal_list/animated_removal_list.dart';
 import 'package:flutter_playground/widgets/discovered_accounts/discovered_accounts_list_item.dart';
 import 'package:provider/provider.dart';
-
+import '../../view_models/discovered_accounts_list_data_item.dart';
 import 'discovered_accounts_vm.dart';
+
 class DiscoveredAccounts extends StatelessWidget{
   const DiscoveredAccounts({Key? key}) : super(key: key);
 
