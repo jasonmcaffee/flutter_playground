@@ -47,7 +47,7 @@ class DiscoveredAccountsState extends State<DiscoveredAccounts>{
   onLinkAccountToBUPressed(DiscoveredAccountsListDataItem dataItem, VoidCallback removeItemFromList, DiscoveredAccountsListItemState discoveredAccountsListItemState) async{
     try {
       discoveredAccountsListItemState.setIsLoading(true);
-      // await DiscoveredAccountsVM().linkAccountToBu(dataItem);
+      await DiscoveredAccountsVM().linkAccountToBu(dataItem);
       // discoveredAccountsListItemState.setIsLoading(false);
       removeItemFromList();
     }catch(e){

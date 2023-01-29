@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_playground/widgets/SliverAnimatedListFromFlutterDev.dart';
 import 'package:flutter_playground/widgets/discovered_accounts/discovered_accounts.dart';
 
 void main() {
@@ -104,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 500,
               height: 500,
               child: DiscoveredAccounts(),
+              // child: SliverAnimatedListSample(),
             ),
             // const SliverAnimatedListSample(),
             Text(

@@ -43,6 +43,7 @@ class DiscoveredAccountsListItemState extends State<DiscoveredAccountsListItem>{
         Expanded(child: IconButton(
           icon: const Icon(Icons.remove_circle),
           onPressed: () {
+            setIsLoading(true);
             widget.onLinkAccountToBUPressed(this);
           },
           tooltip: 'Remove the selected item.',
