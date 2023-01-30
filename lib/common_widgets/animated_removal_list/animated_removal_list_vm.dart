@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 //function signature used for creating a new item to represent the item being removed from the list.
 //creating a new widget instance to render how the item looks as it's being removed allows
 //us the provider of the RemovedItemBuilder function to perform animations.
@@ -17,16 +16,20 @@ typedef RemovedItemBuilder<TDataItem> = Widget Function(
 // sample app. More list methods are easily added, however methods that
 // mutate the list must make the same changes to the animated list in terms
 // of [AnimatedListState.insertItem] and [AnimatedList.removeItem].
-class ListModel<TDataItem> {
+class ListModel<TDataItem, TListItemState extends State<StatefulWidget>> {
   ListModel({
     required this.listKey,
     Iterable<TDataItem>? dataItems,
-  }) : dataItems = List<TDataItem>.from(dataItems ?? <TDataItem>[]);
+    Iterable<GlobalKey<TListItemState>>? listItemStateGlobalKeys,
+  })  : dataItems = List<TDataItem>.from(dataItems ?? <TDataItem>[]),
+        listItemStateGlobalKeys = List<GlobalKey<TListItemState>>.from(
+            listItemStateGlobalKeys ?? <GlobalKey<TListItemState>>[]);
 
   //required for us to access the SliverAnimatedListState, which holds the UI representation of our data list, and is needed to update the UI.
   final GlobalKey<SliverAnimatedListState> listKey;
   //underlying data structure
   final List<TDataItem> dataItems;
+  final List<GlobalKey<TListItemState>> listItemStateGlobalKeys;
 
   //state of the sliverAnimatedList which is used to remove items from the UI.
   // SliverAnimatedListState get _sliverAnimatedListState => listKey.currentState!;
@@ -38,14 +41,15 @@ class ListModel<TDataItem> {
     _sliverAnimatedListState.insertItem(index);
   }
 
-  void insertAtEnd(TDataItem item){
+  void insertAtEnd(TDataItem item) {
     final index = dataItems.length;
     dataItems.insert(index, item);
+    listItemStateGlobalKeys.insert(index, GlobalKey<TListItemState>());
     _sliverAnimatedListState.insertItem(index);
   }
 
-  void insertAll(List<TDataItem> dataItems){
-    for(var dataItem in dataItems){
+  void insertAll(List<TDataItem> dataItems) {
+    for (var dataItem in dataItems) {
       insertAtEnd(dataItem);
     }
   }
@@ -54,19 +58,22 @@ class ListModel<TDataItem> {
   //calls removedItemBuilder function so that the UI can do animations and render what the item
   //should look like as it's being removed from the list.
   //todo: slideAnimation
-  TDataItem removeAt(int index, Widget Function(BuildContext context, TDataItem dataItem, Animation<double> animation, int index) buildRemovedItem) {
+  TDataItem removeAt(
+      int index,
+      Widget Function(BuildContext context, TDataItem dataItem,
+              Animation<double> animation, int index)
+          buildRemovedItem) {
     final TDataItem removedDataItem = dataItems.removeAt(index);
     final removedItemDisplayNumber = removedDataItem.hashCode;
-    print('removed item index: $index removedItemDisplayNumber: ${removedItemDisplayNumber}');
+    final removedGlobalKey = listItemStateGlobalKeys.removeAt(index);
+    print(
+        'removed item index: $index removedItemDisplayNumber: ${removedItemDisplayNumber}');
     if (removedDataItem != null) {
-      _sliverAnimatedListState.removeItem(
-          index,
-              (BuildContext context, Animation<double> animation){
-            print('animatedList removeItem builder called index: $index');
-            return buildRemovedItem(context, removedDataItem, animation, index);
-          },
-        duration: Duration(seconds: 3)
-      );
+      _sliverAnimatedListState.removeItem(index,
+          (BuildContext context, Animation<double> animation) {
+        print('animatedList removeItem builder called index: $index');
+        return buildRemovedItem(context, removedDataItem, animation, index);
+      }, duration: Duration(seconds: 3));
     }
     return removedDataItem;
   }

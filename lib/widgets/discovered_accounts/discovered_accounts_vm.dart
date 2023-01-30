@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_playground/widgets/discovered_accounts/discovered_accounts_list_item.dart';
 import '../../common_widgets/animated_removal_list/animated_removal_list_vm.dart';
 import '../../view_models/discovered_accounts_list_data_item.dart';
 
-class DiscoveredAccountsVM{
-  late final ListModel<DiscoveredAccountsListDataItem> listModel;
-  DiscoveredAccountsVM(){
+class DiscoveredAccountsVM {
+  late final ListModel<DiscoveredAccountsListDataItem,
+      DiscoveredAccountsListItemState> listModel;
+  DiscoveredAccountsVM() {
     listModel = ListModel(
-      listKey:  GlobalKey<SliverAnimatedListState>(),
+      listKey: GlobalKey<SliverAnimatedListState>(),
     );
   }
 
@@ -25,7 +27,8 @@ class DiscoveredAccountsVM{
   }
 }
 
-Future<List<DiscoveredAccountsListDataItem>> fakeBackendCallToGetDiscoveredAccounts() async {
+Future<List<DiscoveredAccountsListDataItem>>
+    fakeBackendCallToGetDiscoveredAccounts() async {
   await Future.delayed(const Duration(seconds: 1));
   return <DiscoveredAccountsListDataItem>[
     DiscoveredAccountsListDataItem(displayText: 'Account 0'),

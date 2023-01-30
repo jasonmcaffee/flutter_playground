@@ -7,14 +7,25 @@ import 'removal_list_item.dart';
 //https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html
 
 //function signature for creating a new item
-typedef BuildItem<TDataItem> = Widget Function (BuildContext context, TDataItem dataItem, Animation<double> animation, int index, VoidCallback removeItemFromListCallback);
-typedef RemoveItem<TDataItem> = Widget Function (BuildContext context, TDataItem dataItem, Animation<double> animation, int index);
+typedef BuildItem<TDataItem, TListItemState extends State<StatefulWidget>,
+        TGlobalKey extends GlobalKey<TListItemState>>
+    = Widget Function(
+        BuildContext context,
+        TDataItem dataItem,
+        TGlobalKey listItemKey,
+        Animation<double> animation,
+        int index,
+        VoidCallback removeItemFromListCallback);
+typedef RemoveItem<TDataItem> = Widget Function(BuildContext context,
+    TDataItem dataItem, Animation<double> animation, int index);
 
-class AnimatedRemovalList<TDataItem> extends StatefulWidget {
+class AnimatedRemovalList<TDataItem,
+    TListItemState extends State<StatefulWidget>> extends StatefulWidget {
   //model for syncing sliverAnimatedState and dataItems.
   //is referenced by AnimatedRemovalListState during initState
-  final ListModel<TDataItem> listModel;
-  final BuildItem<TDataItem> buildItem;
+  final ListModel<TDataItem, TListItemState> listModel;
+  final BuildItem<TDataItem, TListItemState, GlobalKey<TListItemState>>
+      buildItem;
   final RemoveItem<TDataItem> buildRemovedItem;
   //constructor
   const AnimatedRemovalList({
@@ -30,16 +41,13 @@ class AnimatedRemovalList<TDataItem> extends StatefulWidget {
   //https://stackoverflow.com/questions/50287995/passing-data-to-statefulwidget-and-accessing-it-in-its-state-in-flutter
   @override
   State<AnimatedRemovalList> createState() =>
-      _AnimatedRemovalListState<TDataItem>();
+      _AnimatedRemovalListState<TDataItem, TListItemState>();
 }
 
-
-class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDataItem>> {
+class _AnimatedRemovalListState<TDataItem,
+        TListItemState extends State<StatefulWidget>>
+    extends State<AnimatedRemovalList<TDataItem, TListItemState>> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  //responsible for wrapping the underlying data model and SliverListAnimatedState model, in order to keep them both in sync.
-  // late ListModel<TDataItem> _listModel;
-
-  //no constructor, as we are not allowed to pass constructor params.  everything must be done in initState
 
   @override
   void initState() {
@@ -51,16 +59,27 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
     final dataItem = widget.listModel[index];
-    return widget.buildItem(context, dataItem, animation, index, ()=> _removeItemAndBuildRemovedItem(context, index, animation, dataItem));
+    final listItemKey = widget.listModel.listItemStateGlobalKeys[index];
+    return widget.buildItem(
+        context,
+        dataItem,
+        listItemKey,
+        animation,
+        index,
+        () => _removeItemAndBuildRemovedItem(
+            context, index, animation, dataItem));
   }
 
   //called on by the ListItem widget, which is passed a reference to this function so it can call when it is ready for the
   //item to be removed from the list.
   //note: don't use index as it's typically outdated, as it's from a closure and becomes stale when other items are removed
-  _removeItemAndBuildRemovedItem(BuildContext context, int likelyIncorrectIndex, Animation<double> animation, TDataItem dataItem){
+  _removeItemAndBuildRemovedItem(BuildContext context, int likelyIncorrectIndex,
+      Animation<double> animation, TDataItem dataItem) {
     final indexToRemove = widget.listModel.indexOf(dataItem);
-    print('_removeItemAndBuildRemovedItem removing $indexToRemove original index: $likelyIncorrectIndex');
-    widget.listModel.removeAt(indexToRemove, (BuildContext context, TDataItem dataItem, Animation<double> animation, int index) {
+    print(
+        '_removeItemAndBuildRemovedItem removing $indexToRemove original index: $likelyIncorrectIndex');
+    widget.listModel.removeAt(indexToRemove, (BuildContext context,
+        TDataItem dataItem, Animation<double> animation, int index) {
       return widget.buildRemovedItem(context, dataItem, animation, index);
     });
   }
@@ -78,11 +97,10 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
               itemBuilder: _buildItem,
             ),
           ],
-        )
-    );
+        ));
   }
 
-  Widget createSliverAppBar(){
+  Widget createSliverAppBar() {
     return SliverAppBar(
       title: const Text(
         'SliverAnimatedList',
@@ -93,7 +111,7 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
       backgroundColor: Colors.amber[900],
       leading: IconButton(
         icon: const Icon(Icons.add_circle),
-        onPressed: (){},
+        onPressed: () {},
         tooltip: 'Insert a new item.',
         iconSize: 32,
       ),
@@ -101,5 +119,3 @@ class _AnimatedRemovalListState<TDataItem> extends State<AnimatedRemovalList<TDa
     );
   }
 }
-
-
