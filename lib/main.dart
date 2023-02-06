@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_playground/apps/AnimatedList1App.dart';
 import 'package:flutter_playground/widgets/SliverAnimatedListFromFlutterDev.dart';
 import 'package:flutter_playground/widgets/discovered_accounts/discovered_accounts.dart';
+import 'package:flutter_playground/widgets/provider_demo/todo_list.dart';
+import 'package:flutter_playground/widgets/provider_demo/todo_list_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -108,7 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(
               width: 500,
               height: 500,
-              child: DiscoveredAccounts(),
+              // child: DiscoveredAccounts(),
+              child: TodoListPage(),
               // child: SliverAnimatedListSample(),
             ),
             // const SliverAnimatedListSample(),
