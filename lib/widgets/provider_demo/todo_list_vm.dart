@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 
-class TodoListItem {
+class TodoListItemModel {
   bool isComplete = false;
   String displayText;
-  TodoListItem(this.isComplete, this.displayText);
+  TodoListItemModel(this.isComplete, this.displayText);
 }
 
 class TodoListModel extends ChangeNotifier {
-  List<TodoListItem> todoListItems = [];
+  List<TodoListItemModel> todoListItems = [];
 
   Future<void> fetchTodoListItems() async {
     Future.delayed(const Duration(seconds: 1));
     todoListItems = [
-      TodoListItem(false, 'clean bathroom'),
+      TodoListItemModel(false, 'clean bathrooms'),
+      TodoListItemModel(false, 'buy groceries'),
+      TodoListItemModel(false, 'update todo list'),
+      TodoListItemModel(false, 'mop floors'),
+      TodoListItemModel(false, 'car wash'),
+      TodoListItemModel(false, 'get hair cut'),
     ];
+    notifyListeners();
+  }
+
+  updateTodo(TodoListItemModel todoListItemModel) {
     notifyListeners();
   }
 }
