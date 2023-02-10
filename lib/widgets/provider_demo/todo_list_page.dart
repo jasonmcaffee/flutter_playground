@@ -3,6 +3,7 @@ import 'package:flutter_playground/widgets/provider_demo/todo_list.dart';
 import 'package:flutter_playground/widgets/provider_demo/todo_list_vm.dart';
 import 'package:provider/provider.dart';
 
+//https://docs.flutter.dev/development/data-and-backend/state-mgmt/simple
 class TodoListPage extends StatefulWidget {
   const TodoListPage({Key? key}) : super(key: key);
 
@@ -19,7 +20,7 @@ class TodoListPageState extends State<TodoListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<TodoListModel>(
       create: (context) => TodoListModel()..fetchTodoListItems(),
       child: const TodoList(),
     );

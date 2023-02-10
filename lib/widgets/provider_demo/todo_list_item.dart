@@ -3,13 +3,17 @@ import 'package:flutter_playground/widgets/provider_demo/todo_list_vm.dart';
 import 'package:provider/provider.dart';
 
 class TodoListItem extends StatelessWidget {
-  final TodoListItemModel todoListItemModel;
-  const TodoListItem({Key? key, required this.todoListItemModel})
+  final int todoListItemModelId;
+  const TodoListItem({Key? key, required this.todoListItemModelId})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final todoListItemModel = context.select<TodoListModel, TodoListItemModel>(
+        (todoListModel) => todoListModel.getItemModelById(todoListItemModelId));
+
     print('building todo: ${todoListItemModel.displayText}');
+
     return Row(
       children: [
         Expanded(child: Text('${todoListItemModel.displayText}')),
@@ -18,8 +22,9 @@ class TodoListItem extends StatelessWidget {
           value: todoListItemModel.isComplete,
           onChanged: (bool? value) {
             todoListItemModel.isComplete = value!;
-            Provider.of<TodoListModel>(context, listen: false)
-                .updateTodo(todoListItemModel);
+            // Provider.of<TodoListModel>(context, listen: false)
+            //     .updateTodo(todoListItemModel);
+            context.read<TodoListModel>().updateTodo(todoListItemModel);
           },
         ))
       ],

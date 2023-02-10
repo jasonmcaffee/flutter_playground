@@ -19,12 +19,15 @@ class TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
     // final todoListModel = Provider.of<TodoListModel>(context);
-    final todoListModel = context.watch<TodoListModel>();
+    // final todoListModel = context.watch<TodoListModel>();
+    final length = context.select<TodoListModel, int>(
+        (todoListModel) => todoListModel.todoListItems.length);
     return AnimatedList(
-        initialItemCount: todoListModel.todoListItems.length,
+        initialItemCount: length,
         itemBuilder: (context, index, _) {
+          final todoListModel = context.read<TodoListModel>();
           final todoListItemModel = todoListModel.todoListItems[index];
-          return TodoListItem(todoListItemModel: todoListItemModel);
+          return TodoListItem(todoListItemModelId: todoListItemModel.id);
         });
   }
 }

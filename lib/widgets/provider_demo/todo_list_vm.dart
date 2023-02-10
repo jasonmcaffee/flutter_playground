@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 
+@immutable
 class TodoListItemModel {
-  bool isComplete = false;
+  int id;
+  bool isComplete;
   String displayText;
-  TodoListItemModel(this.isComplete, this.displayText);
+  TodoListItemModel(this.id, this.isComplete, this.displayText);
+
+  // @override
+  // int get hashCode => id;
+  //
+  // @override
+  // bool operator ==(Object other) {
+  //   return false;
+  //   // return other is TodoListItemModel && other.id == id;
+  // }
 }
 
 class TodoListModel extends ChangeNotifier {
@@ -12,17 +23,26 @@ class TodoListModel extends ChangeNotifier {
   Future<void> fetchTodoListItems() async {
     Future.delayed(const Duration(seconds: 1));
     todoListItems = [
-      TodoListItemModel(false, 'clean bathrooms'),
-      TodoListItemModel(false, 'buy groceries'),
-      TodoListItemModel(false, 'update todo list'),
-      TodoListItemModel(false, 'mop floors'),
-      TodoListItemModel(false, 'car wash'),
-      TodoListItemModel(false, 'get hair cut'),
+      TodoListItemModel(1, false, 'clean bathrooms'),
+      TodoListItemModel(2, false, 'buy groceries'),
+      TodoListItemModel(3, false, 'update todo list'),
+      TodoListItemModel(4, false, 'mop floors'),
+      TodoListItemModel(5, false, 'car wash'),
+      TodoListItemModel(6, false, 'get hair cut'),
     ];
     notifyListeners();
   }
 
+  TodoListItemModel getItemModelById(int id) {
+    return todoListItems.firstWhere((element) => element.id == id);
+  }
+
+  //context.select requires that a new object be created so that the comparison of previous to new doesn't return true.
   updateTodo(TodoListItemModel todoListItemModel) {
+    final index = todoListItems.indexOf(todoListItemModel);
+    final newItem = TodoListItemModel(todoListItemModel.id,
+        todoListItemModel.isComplete, todoListItemModel.displayText);
+    todoListItems[index] = newItem;
     notifyListeners();
   }
 }
