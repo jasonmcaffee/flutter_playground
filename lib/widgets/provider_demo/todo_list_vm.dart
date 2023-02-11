@@ -19,6 +19,7 @@ class TodoListItemModel {
 
 class TodoListModel extends ChangeNotifier {
   List<TodoListItemModel> todoListItems = [];
+  bool hasInitialLoadOccurred = false;
 
   Future<void> fetchTodoListItems() async {
     Future.delayed(const Duration(seconds: 1));
@@ -30,6 +31,7 @@ class TodoListModel extends ChangeNotifier {
       TodoListItemModel(5, false, 'car wash'),
       TodoListItemModel(6, false, 'get hair cut'),
     ];
+    hasInitialLoadOccurred = true;
     notifyListeners();
   }
 

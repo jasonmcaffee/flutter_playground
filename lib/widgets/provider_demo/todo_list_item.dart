@@ -9,6 +9,8 @@ class TodoListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //find the immutable instance so that we only update when there is a new instance/update to a single item.
+    //if the instance wasn't replaced, then the build function doesn't fire.
     final todoListItemModel = context.select<TodoListModel, TodoListItemModel>(
         (todoListModel) => todoListModel.getItemModelById(todoListItemModelId));
 
@@ -18,15 +20,18 @@ class TodoListItem extends StatelessWidget {
       children: [
         Expanded(child: Text('${todoListItemModel.displayText}')),
         Expanded(
-            child: Checkbox(
-          value: todoListItemModel.isComplete,
-          onChanged: (bool? value) {
-            todoListItemModel.isComplete = value!;
-            // Provider.of<TodoListModel>(context, listen: false)
-            //     .updateTodo(todoListItemModel);
-            context.read<TodoListModel>().updateTodo(todoListItemModel);
-          },
-        ))
+          child: Checkbox(
+            value: todoListItemModel.isComplete,
+            onChanged: (bool? value) {
+              //we can set the value, then have updateTodo handle the copying aspect.  could also be done here if we wanted.
+              todoListItemModel.isComplete = value!;
+              //read without without listening.
+              // Provider.of<TodoListModel>(context, listen: false)
+              //     .updateTodo(todoListItemModel);
+              context.read<TodoListModel>().updateTodo(todoListItemModel);
+            },
+          )
+        )
       ],
     );
   }

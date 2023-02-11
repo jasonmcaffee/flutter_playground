@@ -26,24 +26,25 @@ class DiscoveredAccountsState extends State<DiscoveredAccounts> {
     print('DiscoveredAccountsState build called');
     return Scaffold(
         body: AnimatedRemovalList<DiscoveredAccountsListDataItem,
-            DiscoveredAccountsListItemState>(
-      listModel: discoveredAccountsVM.listModel,
-      buildItem: (BuildContext context,
-          DiscoveredAccountsListDataItem dataItem,
-          GlobalKey<DiscoveredAccountsListItemState> listItemKey,
-          Animation<double> animation,
-          int index,
-          VoidCallback removeItemFromList) {
-        return buildItem(index, dataItem, listItemKey, discoveredAccountsVM,
-            removeItemFromList);
-      },
-      buildRemovedItem: (BuildContext context,
-          DiscoveredAccountsListDataItem dataItem,
-          Animation<double> animation,
-          int index) {
-        return buildRemovedItem(context, dataItem, animation, index);
-      },
-    ));
+          DiscoveredAccountsListItemState>(
+            listModel: discoveredAccountsVM.listModel,
+            buildItem: (BuildContext context,
+                DiscoveredAccountsListDataItem dataItem,
+                GlobalKey<DiscoveredAccountsListItemState> listItemKey,
+                Animation<double> animation,
+                int index,
+                VoidCallback removeItemFromList) {
+              return buildItem(index, dataItem, listItemKey, discoveredAccountsVM,
+                  removeItemFromList);
+            },
+            buildRemovedItem: (BuildContext context,
+                DiscoveredAccountsListDataItem dataItem,
+                Animation<double> animation,
+                int index) {
+              return buildRemovedItem(context, dataItem, animation, index);
+            },
+        )
+    );
   }
 
   //called on for each item from getDiscoveredAccounts call to listModel.insertAll(dataItems)
