@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_playground/apps/AnimatedList1App.dart';
 import 'package:flutter_playground/widgets/SliverAnimatedListFromFlutterDev.dart';
 import 'package:flutter_playground/widgets/discovered_accounts/discovered_accounts.dart';
+import 'package:flutter_playground/widgets/event_bus_demo/event_bus_page.dart';
 import 'package:flutter_playground/widgets/provider_demo/todo_list.dart';
 import 'package:flutter_playground/widgets/provider_demo/todo_list_page.dart';
 
@@ -104,14 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Animated List',
-            ),
             const SizedBox(
               width: 500,
               height: 500,
               // child: DiscoveredAccounts(),
-              child: TodoListPage(),
+              // child: TodoListPage(),
+              child: EventBusPage(),
               // child: SliverAnimatedListSample(),
             ),
             // const SliverAnimatedListSample(),
