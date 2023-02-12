@@ -92,24 +92,60 @@ class TodoListModel extends ChangeNotifier {
   }
 }
 
+//...
+
 //TodoListPage widget
 //change notifier provider allows all widgets in the TodoList widget tree to respond to events published by the ChangeNotifier model.
 Widget build(BuildContext context) {
   return ChangeNotifierProvider<TodoListModel>(
-    create: (context) => TodoListModel()..fetchTodoListItems(),
+    create: (context) => TodoListModel(),
     child: const TodoList(),
   );
 }
 
-//TodoListItem widget 
-//here we can use select filtering so that we only update this Widget's UI when its item is changed.
+//...
+//TodoList
 Widget build(BuildContext context) {
-  //find the immutable instance so that we only update when there is a new instance/update to a single item.
-  //if the instance wasn't replaced, then the build function doesn't fire.
-  final todoListItemModel = context.select<TodoListModel, TodoListItemModel>(
-          (todoListModel) => todoListModel.getItemModelById(todoListItemModelId));
+  //We use context as a service locator for TodoListModel, so that we get access to the instance created by the ChangeNotifierProvider above
+  //We can also filter which data we care about having changed.
+  //This allows us to only rebuild this widget when someState changes on TodoListModel.  
+  //Other updates of the model (notifyListeners()) would be ignored, and would not cause this widget to rebuild.
+  final someState = context.select<TodoListModel, String>((model) => model.someState);
+  print('someState: $someState');
+  
+  //DONT use either Provider.of or context.watch (same thing) here, as any notifyListeners will trigger a rebuild,
+  //and we typically don't want that behavior when dealing with a list of items.
+  // final todoListModel = Provider.of<TodoListModel>(context); <- any notifyListeners() call in TodoListModel would trigger a rebuild
+  // final todoListModel = context.watch<TodoListModel>(); <- any notifyListeners() call in TodoListModel would trigger a rebuild
+  
+  return AnimatedList(
+      initialItemCount: context.read<TodoListModel>().todoListItems.length,
+      itemBuilder: (context, index, _) {
+        //use context to 
+        final todoListModel = context.read<TodoListModel>();
+        final todoListItemModel = todoListModel.todoListItems[index];
+        return TodoListItem(todoListItemModelId: todoListItemModel.id);
+      });
+}
 
-  return Text('${todoListItemModel.displayText}');
+//...
+
+//TodoListItem widget
+class TodoListItem extends StatelessWidget {
+  final int todoListItemModelId;
+
+  const TodoListItem({Key? key, required this.todoListItemModelId})
+      : super(key: key);
+
+  Widget build(BuildContext context) {
+    //Here we can use select filtering so that we only update this Widget's UI when its item has changed.
+    //To optimize which items are updated by filtering for changes of a single item in the list 
+    //if the instance wasn't replaced, then this instance's build function doesn't fire.
+    final todoListItemModel = context.select<TodoListModel, TodoListItemModel>(
+            (todoListModel) => todoListModel.getItemModelById(todoListItemModelId));
+
+    return Text('${todoListItemModel.displayText}');
+  }
 }
 
 ```
