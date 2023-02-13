@@ -57,7 +57,7 @@ class UserPressedButtonTwo {}
 
 //module B subscribes to messages of type X, published by any module
 class ModuleB {
-  initState(){
+  init(){
     eventBus.on<UserPressedButtonOne>().listen((event) => {
       //respond to the event
     });
