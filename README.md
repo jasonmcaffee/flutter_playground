@@ -31,6 +31,8 @@ class ParentA{
 }
 ```
 
+A working demo can be found [here](https://github.com/jasonmcaffee/flutter_playground/tree/master/lib/widgets/event_bus_demo)
+
 ## Event Driven Architecture
 [Event Driven](https://martinfowler.com/articles/201701-event-driven.html)
 
@@ -73,6 +75,8 @@ class ModuleA {
   }
 }
 ```
+
+A working demo can be found [here](https://github.com/jasonmcaffee/flutter_playground/tree/master/lib/widgets/event_bus_demo)
 
 ### Provider
 
@@ -180,3 +184,5 @@ class TodoListItem extends StatelessWidget {
   }
 }
 ```
+
+A working demo can be found [here](https://github.com/jasonmcaffee/flutter_playground/tree/master/lib/widgets/provider_demo)
