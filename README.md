@@ -13,6 +13,7 @@ It also frees parent A from the nuances of child B's instantiation.
 
 ### Service Locator
 https://martinfowler.com/articles/injection.html#UsingAServiceLocator
+
 [Get It](https://pub.dev/packages/get_it) is an Inversion of Control container that allows us to register and lookup objects through a singleton registry.
 
 ```dart
