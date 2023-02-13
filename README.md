@@ -6,7 +6,7 @@ Playground for Flutter and Dart experimentation.
 ## Dependency Injection/Inversion of Control
 Dependency Injection allows us to invert the control of what instantiates and/or finds dependencies in a class.
 
-Rather than parent A instantiating child B, parent A is instead provided a mechanism for retrieving child B.
+Rather than parent A instantiating child B, parent A is instead provided a mechanism for retrieving or accepting child B.
 
 This becomes useful in testing, as it allows us to switch out the implementation or instance of child B, without having to change parent A.
 It also frees parent A from the nuances of child B's instantiation.
