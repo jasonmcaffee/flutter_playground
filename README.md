@@ -29,13 +29,12 @@ class ParentA{
     getIt<ChildB>().someChildFunction();
   }
 }
-
 ```
 
 ## Event Driven Architecture
 [Event Driven](https://martinfowler.com/articles/201701-event-driven.html)
 
-It is often useful to decouple modules from each other by utilizing a publish/subscribe pattern.
+It is often useful to decouple modules from each other by utilizing a publish/subscribe model.
 
 e.g. rather than module A having a reference to modules B and C, in order to notify them of something that occurred in A, 
 we can instead remove modules B and C from A, and instead publish an event from module A that B and C subscribe to.
@@ -59,6 +58,7 @@ class UserPressedButtonTwo {}
 //module B subscribes to messages of type X, published by any module
 class ModuleB {
   init(){
+    //subscribe to all events of type UserPressedButtonOne
     eventBus.on<UserPressedButtonOne>().listen((event) => {
       //respond to the event
     });
@@ -68,10 +68,10 @@ class ModuleB {
 //publish a message from
 class ModuleA {
   someFunction(){
+    //notify all subscribers of events of type UserPressedButtonOne
     eventBus.fire(UserPressedButtonOne());
   }
 }
-
 ```
 
 ### Provider
@@ -138,7 +138,6 @@ Widget build(BuildContext context) {
         return TodoListItem(todoListItemModelId: todoListItemModel.id);
       });
 }
-
 ```
 
 In more advanced scenarios, we must ensure that select is provided different instances to compare when it makes its determination whether state has changed, and subsequently rebuild the widget.
