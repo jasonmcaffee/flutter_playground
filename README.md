@@ -51,7 +51,7 @@ swap out B with a new module D that subscribes to events previously handled by B
 //instance of event bus shared by modules A, B, and C.  Often a singleton of event bus can be used throughout the entire app.
 EventBus eventBus = EventBus();
 
-//message types
+//event types.  The can have data properties as well, but not shown here for brevity.
 class UserPressedButtonOne {}
 class UserPressedButtonTwo {}
 
