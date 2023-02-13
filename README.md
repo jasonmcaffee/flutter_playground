@@ -76,10 +76,20 @@ class ModuleA {
 ### Provider
 
 [Provider](https://pub.dev/packages/provider) is a library that offers functionality for:
-- Publish/Subscribe model: Widgets/components updating the UI by responding to events/notifications from ChangeNotifier notifyListeners() calls.
-- Service Locator: Gaining access to providers/data deep down a widget/component tree, without having to explicitly pass the data down to each node in the tree.
+- Publish/Subscribe model: Widgets are able to easily re-build/update the UI by subscribing to notifications from ChangeNotifier notifyListeners() calls.
+- Service Locator: Gaining access to ChangeNotifierProvider data (e.g. model created during create()) from deep down within a widget/component tree, without having to explicitly pass the data into each of the constructors of widgets/nodes in the tree.
 
-
+Provider utilizes these main components to facilitate the above functionality:
+- ChangeNotifier 
+  - An [Observer Pattern](https://en.wikipedia.org/wiki/Observer_pattern) implementation that provides notifyListeners() and listener registry functions.
+- ChangeNotifierProvider
+  - Listener of ChangeNotifier's notifications (via notifyListeners() and addListener)
+  - There are many caveats and best practices surrounding the use of ChangeNotifierProvider, which are well documented in the comments of its source code.
+  - Abstracts away InheritedWidget, which is used to share data throughout ChangeNotifierProvider's child's widget tree via the build context.
+- Build Context (passed to each widget's build function)
+  - [extension methods](https://dart.dev/guides/language/extension-methods) for selecting, reading, etc data passed down the InheritedWidget tree.
+    - context.read<TModel>() - get the instance provided by ChangeNotifierProvider's create() call.  e.g. TodoListModel
+    - select<TModel, TDerivedValueToWatch>(lambdaFuncToSelectDerivedValue(model) => model.derivedValueToWatch ) - only rebuild when derivedValueToWatch changes reference (comparison function requires different instances to signal change)
 ```dart
 //change notifier
 class TodoListModel extends ChangeNotifier {
@@ -128,6 +138,27 @@ Widget build(BuildContext context) {
       });
 }
 
+```
+
+In more advanced scenarios, we must ensure that select is provided different instances to compare when it makes its determination whether state has changed, and subsequently rebuild the widget.
+```dart
+class TodoListModel extends ChangeNotifier {
+  List<TodoListItemModel> todoListItems = [];
+  
+  //...
+  
+  //context.select requires that a new object be created so that the comparison of previous to new doesn't return true.
+  updateTodo(TodoListItemModel todoListItemModel) {
+    final index = todoListItems.indexOf(todoListItemModel);
+    //construct a new instance by copying all state.  Libraries such as [Freezed](https://pub.dev/packages/freezed) can minimize the amount of copy code you hand roll.
+    final newItem = TodoListItemModel(todoListItemModel.id,
+        todoListItemModel.isComplete, todoListItemModel.displayText);
+    //replace the old item instance with a new instance.
+    todoListItems[index] = newItem;
+    notifyListeners();
+  }
+}
+
 //...
 
 //TodoListItem widget
@@ -138,14 +169,14 @@ class TodoListItem extends StatelessWidget {
       : super(key: key);
 
   Widget build(BuildContext context) {
-    //Here we can use select filtering so that we only update this Widget's UI when its item has changed.
-    //To optimize which items are updated by filtering for changes of a single item in the list 
-    //if the instance wasn't replaced, then this instance's build function doesn't fire.
+    //Rather than rebuilding regardless of which TodoListItemModel changes, or every time TodoListModel changes,
+    //we can use select filtering so that we can avoid superfluous rebuilds.
+    //Note: the logic inside of select detects changes only when the before and after objects compared must be different instances. 
+    //e.g. if the instance of TodoListItemModel wasn't replaced, then this instance's build function wouldn't fire.
     final todoListItemModel = context.select<TodoListModel, TodoListItemModel>(
             (todoListModel) => todoListModel.getItemModelById(todoListItemModelId));
 
     return Text('${todoListItemModel.displayText}');
   }
 }
-
 ```
